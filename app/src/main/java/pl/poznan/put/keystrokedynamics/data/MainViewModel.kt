@@ -1,17 +1,18 @@
 package pl.poznan.put.keystrokedynamics.data
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class MainViewModel(application: Application) : ViewModel() {
-    private val keyPressDatabase = KeyPressDatabase.getDatabase(application)
+class MainViewModel(
+    private val keyPressDatabase: KeyPressDatabase,
+    private val userPreferences: UserPreferences) : ViewModel() {
     private val keyPressDao = keyPressDatabase.keyPressDao()
-    private var pressTimestamp: Long? = null
+    private var pressTimestamp: Long = 0
 
-    private val userPreferences = UserPreferences(application)
     val isLoggedIn: Flow<Boolean> = userPreferences.isLoggedIn
 
     fun login(username: String) {
@@ -27,25 +28,25 @@ class MainViewModel(application: Application) : ViewModel() {
     }
 
     fun onKeyPress(key: String) {
-        pressTimestamp = System.currentTimeMillis()
+        val newPressTimestamp = System.currentTimeMillis()
+        val duration = newPressTimestamp - pressTimestamp
+        val keyPressEntity = KeyPressEntity(
+            key = key,
+            pressTime = newPressTimestamp,
+            duration = duration
+        )
+        viewModelScope.launch {
+            keyPressDao.insert(keyPressEntity)
+        }
+        // replace the old press timestamp
+        pressTimestamp = newPressTimestamp
     }
 
-    fun onKeyRelease(key: String) {
-        val releaseTimestamp = System.currentTimeMillis()
-
-        pressTimestamp?.let { pressTime ->
-            val duration = releaseTimestamp - pressTime
-            val keyPress = KeyPressEntity(
-                key = key,
-                pressTime = pressTime,
-                duration = duration
-            )
-            viewModelScope.launch {
-                keyPressDao.insert(keyPress)
-            }
+    fun exportDataToCsv(context: Context) {
+        viewModelScope.launch {
+            val keyPresses = keyPressDao.getAllKeyPresses()
+            val csvData = keyPressesToCsv(keyPresses)
+            saveCsvToDownloads(context, csvData)
         }
-
-        // Reset pressTimestamp after storing
-        pressTimestamp = null
     }
 }
