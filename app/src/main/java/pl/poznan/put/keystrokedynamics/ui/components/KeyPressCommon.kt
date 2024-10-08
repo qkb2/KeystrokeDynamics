@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -23,8 +25,11 @@ fun KeyPressReader(viewModel: MainViewModel) {
     var text by remember { mutableStateOf("") }
 
     Column {
-        BasicTextField(
+        TextField(
             value = text,
+            placeholder = {
+                Text("Type something really cool 😎", color = Color.Gray)
+            },
             onValueChange = { newText ->
                 val currentTime = System.currentTimeMillis()
                 if (newText.length > text.length) {
@@ -38,7 +43,7 @@ fun KeyPressReader(viewModel: MainViewModel) {
                 .fillMaxWidth()
                 .padding(8.dp)
         )
-        Text("Type something...")
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
