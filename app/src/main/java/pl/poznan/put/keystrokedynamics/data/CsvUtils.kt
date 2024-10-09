@@ -6,12 +6,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 fun keyPressesToCsv(keyPresses: List<KeyPressEntity>): String {
     val csvBuilder = StringBuilder()
@@ -22,6 +27,35 @@ fun keyPressesToCsv(keyPresses: List<KeyPressEntity>): String {
     }
 
     return csvBuilder.toString()
+}
+
+fun sendCsvToFastApi(csvData: String) {
+    val url = "http://192.168.1.100:8000/upload-csv"  // FastAPI endpoint URL
+    val client = OkHttpClient()
+
+    // Create a request body with the CSV data and the correct media type
+    val requestBody = csvData.toRequestBody("text/csv".toMediaTypeOrNull())
+    // Build the request
+    val request = Request.Builder()
+        .url(url)
+        .post(requestBody)
+        .build()
+
+    // Make the network call
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            Log.e("api", "Request failed: ${e.message}", e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            val responseBody = response.body?.string() ?: "No response body"
+            if (response.isSuccessful) {
+                Log.i("api", "CSV data sent successfully! Response: $responseBody")
+            } else {
+                Log.i("api", "Failed to send CSV data. Response: $responseBody")
+            }
+        }
+    })
 }
 
 fun saveCsvToDownloads(context: Context, csvData: String): Uri? {

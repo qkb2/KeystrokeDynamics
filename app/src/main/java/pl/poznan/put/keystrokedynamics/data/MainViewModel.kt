@@ -46,7 +46,9 @@ class MainViewModel(
         viewModelScope.launch {
             val keyPresses = keyPressDao.getAllKeyPresses()
             val csvData = keyPressesToCsv(keyPresses)
+
             saveCsvToDownloads(context, csvData)
+            sendCsvToFastApi(csvData)
         }
     }
 }
