@@ -20,6 +20,8 @@ import pl.poznan.put.keystrokedynamics.data.KeyPressDatabase
 import pl.poznan.put.keystrokedynamics.data.UserPreferences
 import pl.poznan.put.keystrokedynamics.ui.components.DownloadButton
 import pl.poznan.put.keystrokedynamics.ui.components.KeyPressReader
+import pl.poznan.put.keystrokedynamics.ui.components.LoginScreen
+import pl.poznan.put.keystrokedynamics.ui.components.HomeScreen
 import pl.poznan.put.keystrokedynamics.ui.theme.KeystrokeDynamicsTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,11 +39,11 @@ class MainActivity : ComponentActivity() {
                     val viewModel = MainViewModel(database, userPreferences)
                     // uncomment this when working this app
                     // navigation etc. wasn't necessary so I plugged the write screen directly
-//                    KeystrokeDynamicsApp(viewModel)
-                    Column {
-                        KeyPressReader(viewModel = viewModel)
-                        DownloadButton(viewModel = viewModel)
-                    }
+                    KeystrokeDynamicsApp(viewModel)
+//                    Column {
+//                        KeyPressReader(viewModel = viewModel)
+//                        DownloadButton(viewModel = viewModel)
+//                    }
                 }
             }
         }
@@ -68,7 +70,7 @@ fun KeystrokeDynamicsApp(viewModel: MainViewModel) {
 
     NavHost(navController = navController, startDestination = if (isLoggedIn) "main" else "login") {
         // TODO: add screens, add nav to screens
-        composable("login") {  }
-        composable("main") {  }
+        composable("login") { LoginScreen(viewModel) }
+        composable("main") { HomeScreen(viewModel) }
     }
 }
