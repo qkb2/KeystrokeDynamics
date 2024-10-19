@@ -29,12 +29,13 @@ fun keyPressesToCsv(keyPresses: List<KeyPressEntity>): String {
     return csvBuilder.toString()
 }
 
-fun sendCsvToFastApi(csvData: String) {
-    val url = "http://192.168.1.100:8000/upload-csv"  // FastAPI endpoint URL
+fun sendCsvToFastApi(csvData: String, username: String) {
+    val url = "http://192.168.1.100:8000/upload-csv?username=$username"  // Pass username as query parameter
     val client = OkHttpClient()
 
     // Create a request body with the CSV data and the correct media type
     val requestBody = csvData.toRequestBody("text/csv".toMediaTypeOrNull())
+
     // Build the request
     val request = Request.Builder()
         .url(url)
@@ -57,6 +58,7 @@ fun sendCsvToFastApi(csvData: String) {
         }
     })
 }
+
 
 fun saveCsvToDownloads(context: Context, csvData: String): Uri? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -48,7 +48,8 @@ class MainViewModel(
             val csvData = keyPressesToCsv(keyPresses)
 
             saveCsvToDownloads(context, csvData)
-            sendCsvToFastApi(csvData)
+            // TODO add username here, also fix csv data, now it sends data from all users
+            sendCsvToFastApi(csvData, "username")
         }
     }
 }
