@@ -23,7 +23,8 @@ fun keyPressesToCsv(keyPresses: List<KeyPressEntity>): String {
     csvBuilder.append("Key,PressTime,Duration\n")  // CSV header
 
     for (keyPress in keyPresses) {
-        csvBuilder.append("${keyPress.key},${keyPress.pressTime},${keyPress.duration}\n")
+        csvBuilder.append(
+            "${keyPress.key},${keyPress.pressTime},${keyPress.duration},${keyPress.accelX},${keyPress.accelY},${keyPress.accelZ}\n")
     }
 
     return csvBuilder.toString()

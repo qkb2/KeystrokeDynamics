@@ -11,4 +11,7 @@ interface KeyPressDao {
 
     @Query("SELECT * FROM keypress_table")
     suspend fun getAllKeyPresses(): List<KeyPressEntity>
+
+    @Query("DELETE FROM keypress_table")
+    suspend fun clearDatabase()
 }

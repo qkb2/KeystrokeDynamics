@@ -26,6 +26,12 @@ class UserPreferences(context: Context) {
             preferences[LOGGED_IN_KEY] ?: false
         }
 
+    // Get the login state
+    val username: Flow<String> = dataStore.data
+        .map { preferences ->
+            preferences[USERNAME_KEY] ?: "nn"
+        }
+
     // Save the login state
     suspend fun setLoggedIn(loggedIn: Boolean, username: String) {
         dataStore.edit { preferences ->

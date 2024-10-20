@@ -1,5 +1,7 @@
 package pl.poznan.put.keystrokedynamics
 
+import android.content.Context
+import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,7 +38,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val database = KeyPressDatabase.getDatabase(this)
                     val userPreferences = UserPreferences(this)
-                    val viewModel = MainViewModel(database, userPreferences)
+                    val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+                    val viewModel = MainViewModel(database, userPreferences, sensorManager)
                     // uncomment this when working this app
                     // navigation etc. wasn't necessary so I plugged the write screen directly
                     KeystrokeDynamicsApp(viewModel)
