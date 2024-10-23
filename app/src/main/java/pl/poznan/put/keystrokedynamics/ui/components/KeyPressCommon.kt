@@ -38,7 +38,10 @@ fun KeyPressReader(viewModel: MainViewModel) {
                 }
                 text = newText
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text), // Use text keyboard
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                autoCorrectEnabled = false
+                ), // Use text keyboard
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
