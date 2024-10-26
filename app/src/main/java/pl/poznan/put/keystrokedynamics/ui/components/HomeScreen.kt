@@ -22,7 +22,10 @@ fun HomeScreen(viewModel: MainViewModel){
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End
     ) {
-        Button(onClick = { viewModel.logout() }) {
+        Button(
+            onClick = { viewModel.logout() },
+            modifier = Modifier.padding(16.dp)
+        ) {
             Text("Logout")
         }
     }

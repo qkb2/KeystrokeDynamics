@@ -55,20 +55,38 @@ class MainViewModel(
         }
     }
 
+    fun clearDatabase() {
+        viewModelScope.launch {
+            keyPressDao.clearDatabase()
+        }
+    }
+
     fun onKeyPress(key: String) {
         viewModelScope.launch {
             val newPressTimestamp = System.currentTimeMillis()
             val duration = newPressTimestamp - pressTimestamp.longValue
+            var keyToInsert = key
+
+            if (key == "\n") {
+                keyToInsert = "NL"
+            }
+            else if (key == " ") {
+                keyToInsert = "SP"
+            }
 
             val keyPressEntity = KeyPressEntity(
-                key = key,
+                key = keyToInsert,
                 pressTime = newPressTimestamp,
                 duration = duration,
                 accelX = accelX,
                 accelY = accelY,
                 accelZ = accelZ,
             )
-            keyPressDao.insert(keyPressEntity)
+
+            if (key.isNotEmpty() && pressTimestamp.longValue != 0L) {
+                keyPressDao.insert(keyPressEntity)
+            }
+
             pressTimestamp.longValue = newPressTimestamp
         }
     }

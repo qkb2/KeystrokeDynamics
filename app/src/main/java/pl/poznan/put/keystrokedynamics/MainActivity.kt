@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
                     val userPreferences = UserPreferences(this)
                     val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
                     val viewModel = MainViewModel(database, userPreferences, sensorManager)
+                    viewModel.clearDatabase()
                     // uncomment this when working this app
                     // navigation etc. wasn't necessary so I plugged the write screen directly
                     KeystrokeDynamicsApp(viewModel)

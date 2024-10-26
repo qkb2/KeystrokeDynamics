@@ -31,10 +31,12 @@ fun KeyPressReader(viewModel: MainViewModel) {
                 Text("Type something really cool 😎", color = Color.Gray)
             },
             onValueChange = { newText ->
-                val currentTime = System.currentTimeMillis()
                 if (newText.length > text.length) {
                     // Key pressed (a new character added)
                     viewModel.onKeyPress(newText.last().toString())
+                }
+                else if (newText.length < text.length) {
+                    viewModel.onKeyPress("DEL")
                 }
                 text = newText
             },
