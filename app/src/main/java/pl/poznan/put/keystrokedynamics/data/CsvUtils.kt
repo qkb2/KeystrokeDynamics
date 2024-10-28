@@ -24,8 +24,9 @@ fun keyPressesToCsv(keyPresses: List<KeyPressEntity>): String {
 
     for (keyPress in keyPresses) {
         csvBuilder.append(
-            "${keyPress.key},${keyPress.pressTime},${keyPress.duration},${keyPress.accelX},${keyPress.accelY},${keyPress.accelZ}\n")
+            "${keyPress.key}\t${keyPress.pressTime}\t${keyPress.duration}\t${keyPress.accelX}\t${keyPress.accelY}\t${keyPress.accelZ}\n")
     }
+    // TODO: rename file and methods to TSV
 
     return csvBuilder.toString()
 }
