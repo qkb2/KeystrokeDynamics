@@ -92,15 +92,16 @@ class MainViewModel(
     }
 
 
-    fun exportDataToCsv(context: Context) {
+    fun exportDataToTsv(context: Context) {
         viewModelScope.launch {
             val keyPresses = keyPressDao.getAllKeyPresses()
-            val csvData = keyPressesToTsv(keyPresses)
+            val tsvData = keyPressesToTsv(keyPresses)
 
-            saveTsvToDownloads(context, csvData)
-            sendTsvToFastApi(csvData, username.toString())
-            // TODO: fix username, its
-            // "pl.poznan.put.keystrokedynamics.data.UserPreferences$special$$inlined$map$2@16b1674"
+            username.collect { user ->
+                saveTsvToDownloads(context, tsvData)
+                sendTsvToFastApi(tsvData, user, context)
+            }
+            // TODO: tsvData doesn't contain first letter
         }
     }
 }

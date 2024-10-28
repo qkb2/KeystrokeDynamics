@@ -23,7 +23,7 @@ fun DownloadButton(viewModel: MainViewModel) {
     ) { isGranted ->
         if (isGranted) {
             // Permission granted, proceed with CSV export
-            viewModel.exportDataToCsv(context)
+            viewModel.exportDataToTsv(context)
         } else {
             // Permission denied
             Toast.makeText(context, "Storage permission denied", Toast.LENGTH_SHORT).show()
@@ -41,11 +41,11 @@ fun DownloadButton(viewModel: MainViewModel) {
                 requestStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             } else {
                 // Permission already granted, proceed with CSV export
-                viewModel.exportDataToCsv(context)
+                viewModel.exportDataToTsv(context)
             }
         } else {
             // For Android 10+, no permission is needed, directly export data
-            viewModel.exportDataToCsv(context)
+            viewModel.exportDataToTsv(context)
         }
     }
 

@@ -17,6 +17,13 @@ import java.io.OutputStream
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import pl.poznan.put.keystrokedynamics.R
+
+import java.security.cert.CertificateFactory
+import java.security.KeyStore
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     val tsvBuilder = StringBuilder()
@@ -30,13 +37,14 @@ fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     return tsvBuilder.toString()
 }
 
-fun sendTsvToFastApi(tsvData: String, username: String) {
+fun sendTsvToFastApi(tsvData: String, username: String, context: Context) {
 //    Log.i("api", "username: $username")
-    val url = "http://192.168.1.100:8000/upload-tsv?username=$username"  // Pass username as query parameter
-    val client = OkHttpClient()
+    val url = "https://192.168.1.100:8000/upload-tsv?username=$username"  // Pass username as query parameter
+    val client = getSslConfiguredClient(context)
 
     // Create a request body with the TSV data and the correct media type
     val requestBody = tsvData.toRequestBody("text/tab-separated-values".toMediaTypeOrNull())
+//    Log.i("api", tsvData)
 
     // Build the request
     val request = Request.Builder()
@@ -59,6 +67,33 @@ fun sendTsvToFastApi(tsvData: String, username: String) {
             }
         }
     })
+}
+
+private fun getSslConfiguredClient(context: Context): OkHttpClient {
+    val certificateFactory = CertificateFactory.getInstance("X.509")
+    val certificate = context.resources.openRawResource(R.raw.cert).use {
+        certificateFactory.generateCertificate(it)
+    }
+
+    // Create a KeyStore containing our trusted CA
+    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType()).apply {
+        load(null, null)
+        setCertificateEntry("ca", certificate)
+    }
+
+    // Create a TrustManager that trusts the CAs in our KeyStore
+    val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()).apply {
+        init(keyStore)
+    }
+    val trustManagers = trustManagerFactory.trustManagers
+    val sslContext = SSLContext.getInstance("TLS").apply {
+        init(null, trustManagers, null)
+    }
+
+    // Build OkHttpClient with the configured SSL context
+    return OkHttpClient.Builder()
+        .sslSocketFactory(sslContext.socketFactory, trustManagers[0] as X509TrustManager)
+        .build()
 }
 
 fun saveTsvToDownloads(context: Context, tsvData: String): Uri? {
