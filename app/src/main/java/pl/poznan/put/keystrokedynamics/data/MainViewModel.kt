@@ -95,10 +95,12 @@ class MainViewModel(
     fun exportDataToCsv(context: Context) {
         viewModelScope.launch {
             val keyPresses = keyPressDao.getAllKeyPresses()
-            val csvData = keyPressesToCsv(keyPresses)
+            val csvData = keyPressesToTsv(keyPresses)
 
-            saveCsvToDownloads(context, csvData)
-            sendCsvToFastApi(csvData, username.toString())
+            saveTsvToDownloads(context, csvData)
+            sendTsvToFastApi(csvData, username.toString())
+            // TODO: fix username, its
+            // "pl.poznan.put.keystrokedynamics.data.UserPreferences$special$$inlined$map$2@16b1674"
         }
     }
 }
