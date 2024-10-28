@@ -74,6 +74,10 @@ class MainViewModel(
                 keyToInsert = "SP"
             }
 
+            if (pressTimestamp.longValue == 0L) {
+                duration = 0L
+            }
+
             val keyPressEntity = KeyPressEntity(
                 key = keyToInsert,
                 pressTime = newPressTimestamp,
@@ -83,7 +87,7 @@ class MainViewModel(
                 accelZ = accelZ,
             )
 
-            if (key.isNotEmpty() && pressTimestamp.longValue != 0L) {
+            if (key.isNotEmpty()) {
                 keyPressDao.insert(keyPressEntity)
             }
 
@@ -101,7 +105,6 @@ class MainViewModel(
                 saveTsvToDownloads(context, tsvData)
                 sendTsvToFastApi(tsvData, user, context)
             }
-            // TODO: tsvData doesn't contain first letter
         }
     }
 }
