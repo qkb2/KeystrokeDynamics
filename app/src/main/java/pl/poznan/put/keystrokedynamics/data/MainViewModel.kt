@@ -64,7 +64,7 @@ class MainViewModel(
     fun onKeyPress(key: String) {
         viewModelScope.launch {
             val newPressTimestamp = System.currentTimeMillis()
-            val duration = newPressTimestamp - pressTimestamp.longValue
+            var duration = newPressTimestamp - pressTimestamp.longValue
             var keyToInsert = key
 
             if (key == "\n") {

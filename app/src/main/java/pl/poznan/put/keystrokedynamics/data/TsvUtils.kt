@@ -34,7 +34,7 @@ fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
             "${keyPress.key}\t${keyPress.pressTime}\t${keyPress.duration}\t${keyPress.accelX}\t${keyPress.accelY}\t${keyPress.accelZ}\n")
     }
 
-    return tsvBuilder.toString()
+    return tsvBuilder.toString().toByteArray(Charsets.UTF_8).toString(Charsets.UTF_8)
 }
 
 fun sendTsvToFastApi(tsvData: String, username: String, context: Context) {
