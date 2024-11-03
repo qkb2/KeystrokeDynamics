@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -30,6 +31,11 @@ fun LoginScreen(viewModel: MainViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Enter the nickname by which you will be recognized",
+            modifier = Modifier.padding(bottom = 16.dp),
+            textAlign = TextAlign.Center,
+        )
 
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -42,7 +48,11 @@ fun LoginScreen(viewModel: MainViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { viewModel.login(username) }) {
+        Button(
+            onClick = { viewModel.login(username) },
+            enabled = username.isNotBlank()
+        )
+        {
             Text("Log In")
         }
     }

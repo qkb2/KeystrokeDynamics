@@ -3,6 +3,7 @@ package pl.poznan.put.keystrokedynamics.ui.components
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,7 +15,7 @@ import androidx.core.content.ContextCompat
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
-fun DownloadButton(viewModel: MainViewModel) {
+fun DownloadButton(viewModel: MainViewModel, text: String, minCount: Int) {
     val context = LocalContext.current
 
     // Create a launcher for requesting storage permission (for Android 9 and below)
@@ -49,7 +50,15 @@ fun DownloadButton(viewModel: MainViewModel) {
         }
     }
 
-    Button(onClick = { checkAndRequestStoragePermission() }) {
+    Button(onClick = {
+        if (text.length >= minCount) { // Min limit
+            Log.i("TAG", "More.")
+            checkAndRequestStoragePermission()
+        } else {
+            Log.i("TAG", "Less.")
+            Toast.makeText(context, "Please enter at least $minCount characters", Toast.LENGTH_SHORT).show()
+        }
+    }) {
         Text("Export Data to CSV")
     }
 }
