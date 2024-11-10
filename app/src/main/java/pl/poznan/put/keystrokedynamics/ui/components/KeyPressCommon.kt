@@ -49,11 +49,12 @@ fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (Stri
             },
             onValueChange = { newText ->
                 if (newText.length > text.length) {
+                    val newTextLen = newText.length - text.length
                     // Key pressed (a new character added)
-                    viewModel.onKeyPress(newText.last().toString())
+                    viewModel.onKeyPress(newText.takeLast(newTextLen))
                 }
                 else if (newText.length < text.length) {
-                    viewModel.onKeyPress("DEL")
+                    viewModel.onKeyPress("KEY:DEL")
                 }
                 text = newText
                 onTextChanged(newText) // inform about text change

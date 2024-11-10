@@ -67,11 +67,12 @@ class MainViewModel(
             var duration = newPressTimestamp - pressTimestamp.longValue
             var keyToInsert = key
 
-            if (key == "\n") {
-                keyToInsert = "NL"
-            }
-            else if (key == " ") {
-                keyToInsert = "SP"
+            keyToInsert = if (key == "\n") {
+                "KEY:NL"
+            } else if (key == " ") {
+                "KEY:SP"
+            } else {
+                "STR:${keyToInsert.replace("\\s".toRegex(), "")}"
             }
 
             if (pressTimestamp.longValue == 0L) {
