@@ -59,7 +59,7 @@ fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (Stri
                 onTextChanged(newText) // inform about text change
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
+                keyboardType = KeyboardType.Password,
                 autoCorrectEnabled = false
                 ), // Use text keyboard
             modifier = Modifier
