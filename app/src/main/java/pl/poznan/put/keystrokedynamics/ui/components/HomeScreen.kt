@@ -23,7 +23,7 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 fun HomeScreen(viewModel: MainViewModel){
     var text by remember { mutableStateOf("") }
     // Min Chars
-    val minChars = 2000
+    val minChars = 0
 
     // Logout Button
     Row(

@@ -20,6 +20,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
@@ -27,8 +28,8 @@ import kotlin.math.max
 
 @Composable
 fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
-    val inputCount = text.length
+    var textState by remember { mutableStateOf(TextFieldValue("")) }
+    val inputCount = textState.text.length
 
     Column {
         Box(
@@ -42,26 +43,31 @@ fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (Stri
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
+
         TextField(
-            value = text,
+            value = textState,
             placeholder = {
                 Text("Type something really cool 😎", color = Color.Gray)
             },
-            onValueChange = { newText ->
-                if (newText.length > text.length) {
-                    // Key pressed (a new character added)
-                    viewModel.onKeyPress(newText.last().toString())
-                }
-                else if (newText.length < text.length) {
+            onValueChange = { newTextState ->
+                val newText = newTextState.text
+                val oldText = textState.text
+                val cursorPosition = newTextState.selection.start
+
+                if (newText.length > oldText.length && cursorPosition > 0) {
+                    // Key pressed (a new character added at cursor position)
+                    viewModel.onKeyPress(newText[cursorPosition - 1].toString())
+                } else if (newText.length < oldText.length) {
                     viewModel.onKeyPress("DEL")
                 }
-                text = newText
+
+                textState = newTextState
                 onTextChanged(newText) // inform about text change
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                autoCorrectEnabled = false
-                ), // Use text keyboard
+                autoCorrectEnabled = false,
+                keyboardType = KeyboardType.Password
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

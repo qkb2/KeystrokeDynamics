@@ -65,14 +65,21 @@ class MainViewModel(
         viewModelScope.launch {
             val newPressTimestamp = System.currentTimeMillis()
             var duration = newPressTimestamp - pressTimestamp.longValue
-            var keyToInsert = key
+            val keyToInsert = when(key) {
+                "\n" -> "NL"      // New line
+                " " -> "SP"       // Space
+                "\"" -> "QM"      // Double quotation mark
+                "\'" -> "AP"      // Single quotation mark
+                "\\" -> "BS"      // Backslash
+                "\t" -> "TB"      // Tab
+                "\b" -> "BS"      // Backspace
+                "\r" -> "CR"      // Carriage return
+                "$" -> "DS"       // Dollar sign
+                else -> key
+            }
 
-            if (key == "\n") {
-                keyToInsert = "NL"
-            }
-            else if (key == " ") {
-                keyToInsert = "SP"
-            }
+            /* consideration: we could also stop treating those as chars and make them
+            full on char tokens, e.g. encode them as Uxxxx no matter the char */
 
             if (pressTimestamp.longValue == 0L) {
                 duration = 0L
