@@ -11,11 +11,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.content.ContextCompat
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
-fun DownloadButton(viewModel: MainViewModel, text: String, minCount: Int) {
+fun DownloadButton(
+    viewModel: MainViewModel,
+    textState: TextFieldValue,
+    minCount: Int,
+    minPhases: Int,
+    onTextReset: () -> Unit
+) {
     val context = LocalContext.current
 
     // Create a launcher for requesting storage permission (for Android 9 and below)
@@ -33,6 +40,7 @@ fun DownloadButton(viewModel: MainViewModel, text: String, minCount: Int) {
 
     // Function to check and request storage permission for Android 9 and below
     fun checkAndRequestStoragePermission() {
+        Log.i("TAG", "In check function")
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(
                     context, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -51,14 +59,21 @@ fun DownloadButton(viewModel: MainViewModel, text: String, minCount: Int) {
     }
 
     Button(onClick = {
-        if (text.length >= minCount) { // Min limit
-            Log.i("TAG", "More.")
-            checkAndRequestStoragePermission()
+        if (textState.text.length >= minCount) {
+            viewModel.incrementPhase()
+            if (viewModel.phasesCompleted.intValue >= minPhases) {
+                Log.i("TAG", "Completed.")
+                checkAndRequestStoragePermission()
+            } else {
+                Log.i("TAG", "Next phase.")
+                Toast.makeText(context, "Please change your position and resume writing.", Toast.LENGTH_SHORT).show()
+                onTextReset()
+            }
         } else {
-            Log.i("TAG", "Less.")
-            Toast.makeText(context, "Please enter at least $minCount characters", Toast.LENGTH_SHORT).show()
+            Log.i("TAG", "Too short.")
+            Toast.makeText(context, "Please enter at least $minCount characters per phase.", Toast.LENGTH_SHORT).show()
         }
     }) {
-        Text("Export Data to CSV")
+        Text("Next Phase")
     }
 }

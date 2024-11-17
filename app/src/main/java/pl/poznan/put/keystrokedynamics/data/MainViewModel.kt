@@ -1,16 +1,18 @@
 package pl.poznan.put.keystrokedynamics.data
 
-import android.app.Application
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -24,6 +26,8 @@ class MainViewModel(
 
     val isLoggedIn: Flow<Boolean> = userPreferences.isLoggedIn
     val username: Flow<String> = userPreferences.username
+
+    var phasesCompleted = mutableIntStateOf(0)
 
     init {
         // Initialize SensorManager and start listening to accelerometer
@@ -49,9 +53,11 @@ class MainViewModel(
     }
 
     fun logout() {
+        Log.i("TAG", "Logging out")
         viewModelScope.launch {
             userPreferences.setLoggedIn(false, "")
             keyPressDao.clearDatabase()
+            phasesCompleted.intValue = 0
         }
     }
 
@@ -108,10 +114,17 @@ class MainViewModel(
             val keyPresses = keyPressDao.getAllKeyPresses()
             val tsvData = keyPressesToTsv(keyPresses)
 
-            username.collect { user ->
-                saveTsvToDownloads(context, tsvData)
+            username.take(1).collect { user ->
+                Log.i("TAG", "In export to tsv function")
+                saveTsvToDownloads(context, user, tsvData)
                 sendTsvToFastApi(tsvData, user, context)
             }
         }
+    }
+
+    fun incrementPhase() {
+        var ph = phasesCompleted.intValue
+        ph++
+        phasesCompleted.intValue = ph
     }
 }

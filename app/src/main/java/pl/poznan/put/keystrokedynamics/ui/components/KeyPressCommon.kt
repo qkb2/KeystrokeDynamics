@@ -27,8 +27,12 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 import kotlin.math.max
 
 @Composable
-fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (String) -> Unit) {
-    var textState by remember { mutableStateOf(TextFieldValue("")) }
+fun KeyPressReader(
+    viewModel: MainViewModel,
+    minCount: Int,
+    minStates: Int,
+    textState: TextFieldValue,
+    onTextChanged: (TextFieldValue) -> Unit) {
     val inputCount = textState.text.length
 
     Column {
@@ -37,7 +41,7 @@ fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (Stri
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = "Chars left to type " + max(0, minCount - inputCount),
+                text = "Chars left to type: ${max(0, minCount - inputCount)}\nPhases left to complete: ${max(0, minStates - viewModel.phasesCompleted.intValue)}",
                 color = Color.Gray,
                 textAlign = TextAlign.End,
                 modifier = Modifier.padding(end = 8.dp)
@@ -61,8 +65,8 @@ fun KeyPressReader(viewModel: MainViewModel, minCount: Int, onTextChanged: (Stri
                     viewModel.onKeyPress("DEL")
                 }
 
-                textState = newTextState
-                onTextChanged(newText) // inform about text change
+//                textState = newTextState
+                onTextChanged(newTextState) // inform about text change
             },
             keyboardOptions = KeyboardOptions(
                 autoCorrectEnabled = false,

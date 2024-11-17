@@ -5,7 +5,6 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,10 +19,10 @@ import androidx.navigation.compose.rememberNavController
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 import pl.poznan.put.keystrokedynamics.data.KeyPressDatabase
 import pl.poznan.put.keystrokedynamics.data.UserPreferences
-import pl.poznan.put.keystrokedynamics.ui.components.DownloadButton
-import pl.poznan.put.keystrokedynamics.ui.components.KeyPressReader
 import pl.poznan.put.keystrokedynamics.ui.components.LoginScreen
 import pl.poznan.put.keystrokedynamics.ui.components.HomeScreen
+import pl.poznan.put.keystrokedynamics.ui.components.TestingScreen
+import pl.poznan.put.keystrokedynamics.ui.components.TrainingScreen
 import pl.poznan.put.keystrokedynamics.ui.theme.KeystrokeDynamicsTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +30,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KeystrokeDynamicsTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -41,13 +39,7 @@ class MainActivity : ComponentActivity() {
                     val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
                     val viewModel = MainViewModel(database, userPreferences, sensorManager)
                     viewModel.clearDatabase()
-                    // uncomment this when working this app
-                    // navigation etc. wasn't necessary so I plugged the write screen directly
                     KeystrokeDynamicsApp(viewModel)
-//                    Column {
-//                        KeyPressReader(viewModel = viewModel)
-//                        DownloadButton(viewModel = viewModel)
-//                    }
                 }
             }
         }
@@ -73,8 +65,9 @@ fun KeystrokeDynamicsApp(viewModel: MainViewModel) {
     }
 
     NavHost(navController = navController, startDestination = if (isLoggedIn) "main" else "login") {
-        // TODO: add screens, add nav to screens
         composable("login") { LoginScreen(viewModel) }
-        composable("main") { HomeScreen(viewModel) }
+        composable("main") { HomeScreen(viewModel, navController) }
+        composable("testing") { TestingScreen(viewModel) }
+        composable("training") { TrainingScreen(viewModel) }
     }
 }

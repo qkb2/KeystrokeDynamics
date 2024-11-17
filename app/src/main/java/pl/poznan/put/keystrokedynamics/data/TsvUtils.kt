@@ -96,21 +96,22 @@ private fun getSslConfiguredClient(context: Context): OkHttpClient {
         .build()
 }
 
-fun saveTsvToDownloads(context: Context, tsvData: String): Uri? {
+fun saveTsvToDownloads(context: Context, username: String, tsvData: String): Uri? {
+    Log.i("TAG", "In save to downloads function")
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // Android 10 and higher: Use MediaStore API
-        saveTsvToDownloadsForQAndAbove(context, tsvData)
+        saveTsvToDownloadsForQAndAbove(context, username, tsvData)
     } else {
         // Android 9 and lower: Directly write to external storage
-        saveTsvToDownloadsForPreQ(context, tsvData)
+        saveTsvToDownloadsForPreQ(context, username, tsvData)
     }
 }
 
 // For Android 10+ (Q and above)
 @RequiresApi(Build.VERSION_CODES.Q)
-private fun saveTsvToDownloadsForQAndAbove(context: Context, tsvData: String): Uri? {
+private fun saveTsvToDownloadsForQAndAbove(context: Context, username: String, tsvData: String): Uri? {
     val contentValues = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, "key_presses.tsv")
+        put(MediaStore.MediaColumns.DISPLAY_NAME, "key_presses_${username}.tsv")
         put(MediaStore.MediaColumns.MIME_TYPE, "text/tab-separated-values")
         put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
     }
@@ -119,13 +120,14 @@ private fun saveTsvToDownloadsForQAndAbove(context: Context, tsvData: String): U
     var uri: Uri? = null
     var outputStream: OutputStream? = null
 
+    Log.i("TAG", "About to save to downloads")
     try {
         uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
         uri?.let {
             outputStream = resolver.openOutputStream(uri)
             outputStream?.use { stream ->
                 stream.write(tsvData.toByteArray())
-                Toast.makeText(context, "File saved to Downloads", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "File saved to Downloads", Toast.LENGTH_SHORT).show()
             }
         }
     } catch (e: IOException) {
@@ -140,15 +142,16 @@ private fun saveTsvToDownloadsForQAndAbove(context: Context, tsvData: String): U
 }
 
 // For Android 9 and below (Pre-Q)
-private fun saveTsvToDownloadsForPreQ(context: Context, tsvData: String): Uri? {
+private fun saveTsvToDownloadsForPreQ(context: Context, username: String, tsvData: String): Uri? {
     val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-    val file = File(downloadsDir, "key_presses.tsv")
+    val file = File(downloadsDir, "key_presses_${username}.tsv")
 
+    Log.i("TAG", "About to save to downloads in preQ")
     return try {
         val fileOutputStream = FileOutputStream(file)
         fileOutputStream.use { stream ->
             stream.write(tsvData.toByteArray())
-            Toast.makeText(context, "File saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "File saved to: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
         }
         Uri.fromFile(file)  // Return Uri of the saved file
     } catch (e: IOException) {
