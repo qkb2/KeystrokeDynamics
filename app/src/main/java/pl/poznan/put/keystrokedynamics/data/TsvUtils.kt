@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager
 
 fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     val tsvBuilder = StringBuilder()
-    tsvBuilder.append("Key\tPressTime\tDuration\tAccelX\tAccelY\tAccelZ\n")  // TSV header
+    tsvBuilder.append("key\tpress_time\tduration\taccel_x\taccel_y\taccel_z\n")  // TSV header
 
     for (keyPress in keyPresses) {
         tsvBuilder.append(
@@ -39,7 +39,7 @@ fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
 
 fun sendTsvToFastApi(tsvData: String, username: String, context: Context) {
 //    Log.i("api", "username: $username")
-    val url = "https://192.168.1.100:8000/upload-tsv?username=$username"  // Pass username as query parameter
+    val url = "https://192.168.1.100:8000/train?username=$username"  // Pass username as query parameter
     val client = getSslConfiguredClient(context)
 
     // Create a request body with the TSV data and the correct media type
