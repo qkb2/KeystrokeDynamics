@@ -21,12 +21,16 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
 fun TestingScreen(viewModel: MainViewModel) {
-    // Min Chars
+    // min chars
     val minChars = 100
     val minPhases = -1 // WARNING! Monkey patch sentinel value! Must NECESSARILY be set to -1
+    // text states
     var textState by remember { mutableStateOf(TextFieldValue("")) }
     var symWritten by remember { mutableIntStateOf(0) }
-    // Training screen
+    // API responses states
+    var responseString by remember { mutableStateOf("") }
+
+    // Training Screen
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -50,11 +54,14 @@ fun TestingScreen(viewModel: MainViewModel) {
             textState,
             minChars,
             minPhases,
-            symWritten
+            symWritten,
+            onResponse = { str -> responseString = str }
         ) {
             textState = TextFieldValue("")
         }
 
-        // TODO: mutable states for API call responses (accuracy etc.)
+        Spacer(modifier = Modifier.size(30.dp))
+        // TODO: prettify the response body
+        Text(responseString)
     }
 }

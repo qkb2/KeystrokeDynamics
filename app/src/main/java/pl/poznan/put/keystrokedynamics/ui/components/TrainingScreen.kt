@@ -24,13 +24,14 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
 fun TrainingScreen(viewModel: MainViewModel){
-//    var text by remember { mutableStateOf("") }
-    // Min Chars
+    // min chars
     val minChars = 300
     val minPhases = 5
+    // text states
     var textState by remember { mutableStateOf(TextFieldValue("")) }
     var symWritten by remember { mutableIntStateOf(0) }
-        // Training screen
+
+    // Testing Screen
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +55,8 @@ fun TrainingScreen(viewModel: MainViewModel){
             textState,
             minChars,
             minPhases,
-            symWritten
+            symWritten,
+            onResponse = { }
         ) {
             textState = TextFieldValue("")
             symWritten = 0

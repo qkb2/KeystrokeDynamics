@@ -117,7 +117,8 @@ class MainViewModel(
     }
 
 
-    fun exportDataToTsv(context: Context, minPhases: Int, symWritten: Int) {
+    fun exportDataToTsv(
+        context: Context, minPhases: Int, symWritten: Int, onResponse: (String) -> Unit) {
         viewModelScope.launch {
             val keyPresses = keyPressDao.getNLatestKeyPresses(symWritten)
             val tsvData = keyPressesToTsv(keyPresses)
@@ -136,7 +137,7 @@ class MainViewModel(
             username.take(1).collect { user ->
                 Log.i("TAG", "In export to tsv function")
                 saveTsvToDownloads(context, user, phases, tsvData)
-                sendTsvToFastApi(tsvData, user, apiString, context)
+                sendTsvToFastApi(tsvData, user, apiString, context, onResponse)
             }
         }
     }

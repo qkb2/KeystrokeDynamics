@@ -37,7 +37,9 @@ fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     return tsvBuilder.toString()
 }
 
-fun sendTsvToFastApi(tsvData: String, username: String, apiString: String, context: Context) {
+fun sendTsvToFastApi(
+    tsvData: String, username: String, apiString: String, context: Context,
+    onResponse: (String) -> Unit) {
 //    Log.i("api", "username: $username")
     val serverUrlString = "https://192.168.1.100:8000"
     val url = "$serverUrlString/$apiString?username=$username"  // Pass username as query parameter
@@ -57,14 +59,17 @@ fun sendTsvToFastApi(tsvData: String, username: String, apiString: String, conte
     client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             Log.e("api", "Request failed: ${e.message}", e)
+            onResponse(e.message ?: "Call failed.")
         }
 
         override fun onResponse(call: Call, response: Response) {
             val responseBody = response.body?.string() ?: "No response body"
             if (response.isSuccessful) {
                 Log.i("api", "TSV data sent successfully! Response: $responseBody")
+                onResponse(responseBody)
             } else {
                 Log.i("api", "Failed to send TSV data. Response: $responseBody")
+                onResponse("Failed with response: $responseBody")
             }
         }
     })
