@@ -46,5 +46,7 @@ fun TestingScreen(viewModel: MainViewModel) {
         ) {
             textState = TextFieldValue("")
         }
+
+        // TODO: mutable states for API call responses (accuracy etc.)
     }
 }

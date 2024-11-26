@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LoginScreen(viewModel: MainViewModel) {
     var username by remember { mutableStateOf("") }
-    val regex = Regex("^\\d+$")
+    val regex = Regex("^\\d*$")
 
     Column(
         modifier = Modifier

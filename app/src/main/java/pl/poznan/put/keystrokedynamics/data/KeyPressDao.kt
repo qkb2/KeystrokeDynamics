@@ -14,4 +14,7 @@ interface KeyPressDao {
 
     @Query("DELETE FROM keypress_table")
     suspend fun clearDatabase()
+
+    @Query("SELECT * FROM keypress_table ORDER BY pressTime DESC LIMIT :n")
+    suspend fun getNLatestKeyPresses(n: Int): List<KeyPressEntity>
 }

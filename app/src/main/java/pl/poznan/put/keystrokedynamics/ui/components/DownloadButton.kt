@@ -74,8 +74,9 @@ fun DownloadButton(
             } else {
                 Log.i("TAG", "Next phase.")
                 Toast.makeText(context, "Please change your position and resume writing.", Toast.LENGTH_SHORT).show()
-                viewModel.onKeyPress("EPH") // end phase symbol
+                checkAndRequestStoragePermission()
                 onTextReset()
+                viewModel.onKeyPress("EPH") // end phase symbol
             }
         } else {
             Log.i("TAG", "Too short.")

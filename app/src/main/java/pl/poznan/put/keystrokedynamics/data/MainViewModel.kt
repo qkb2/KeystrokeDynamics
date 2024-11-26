@@ -119,7 +119,11 @@ class MainViewModel(
 
     fun exportDataToTsv(context: Context, minPhases: Int) {
         viewModelScope.launch {
-            val keyPresses = keyPressDao.getAllKeyPresses()
+            val keyPresses: List<KeyPressEntity> = if (minPhases == -1) {
+                keyPressDao.getNLatestKeyPresses(100)
+            } else {
+                keyPressDao.getNLatestKeyPresses(300) // TODO: make it an actual increment
+            }
             val tsvData = keyPressesToTsv(keyPresses)
             var apiString = "upload_tsv"
             var phases = phasesCompleted.intValue
@@ -131,6 +135,7 @@ class MainViewModel(
             else if (phasesCompleted.intValue == minPhases) {
                 apiString = "train"
             }
+            else if (phasesCompleted.intValue > minPhases) return@launch
 
             username.take(1).collect { user ->
                 Log.i("TAG", "In export to tsv function")
