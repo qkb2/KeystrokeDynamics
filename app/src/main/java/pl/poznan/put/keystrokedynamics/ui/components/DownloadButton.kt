@@ -18,6 +18,7 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 @Composable
 fun DownloadButton(
     viewModel: MainViewModel,
+    buttonText: String,
     textState: TextFieldValue,
     minCount: Int,
     minPhases: Int,
@@ -30,8 +31,8 @@ fun DownloadButton(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Permission granted, proceed with CSV export
-            viewModel.exportDataToTsv(context)
+            // Permission granted, proceed with TSV export
+            viewModel.exportDataToTsv(context, minPhases)
         } else {
             // Permission denied
             Toast.makeText(context, "Storage permission denied", Toast.LENGTH_SHORT).show()
@@ -49,17 +50,23 @@ fun DownloadButton(
                 // Request permission for Android 9 and below
                 requestStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             } else {
-                // Permission already granted, proceed with CSV export
-                viewModel.exportDataToTsv(context)
+                // Permission already granted, proceed with TSV export
+                viewModel.exportDataToTsv(context, minPhases)
             }
         } else {
             // For Android 10+, no permission is needed, directly export data
-            viewModel.exportDataToTsv(context)
+            viewModel.exportDataToTsv(context, minPhases)
         }
     }
 
     Button(onClick = {
-        if (textState.text.length >= minCount) {
+        if (minPhases == -1) {
+            if (textState.text.length >= minCount) {
+                Log.i("TAG", "Inference button click OK.")
+                checkAndRequestStoragePermission()
+            }
+        }
+        else if (textState.text.length >= minCount) {
             viewModel.incrementPhase()
             if (viewModel.phasesCompleted.intValue >= minPhases) {
                 Log.i("TAG", "Completed.")
@@ -67,6 +74,7 @@ fun DownloadButton(
             } else {
                 Log.i("TAG", "Next phase.")
                 Toast.makeText(context, "Please change your position and resume writing.", Toast.LENGTH_SHORT).show()
+                viewModel.onKeyPress("EPH") // end phase symbol
                 onTextReset()
             }
         } else {
@@ -74,6 +82,6 @@ fun DownloadButton(
             Toast.makeText(context, "Please enter at least $minCount characters per phase.", Toast.LENGTH_SHORT).show()
         }
     }) {
-        Text("Next Phase")
+        Text(buttonText)
     }
 }

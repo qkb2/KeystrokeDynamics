@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LoginScreen(viewModel: MainViewModel) {
     var username by remember { mutableStateOf("") }
-    val regex = Regex("\\s")
+    val regex = Regex("^\\d+$")
 
     Column(
         modifier = Modifier
@@ -32,16 +32,16 @@ fun LoginScreen(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Enter the nickname by which you will be recognized",
+            text = "Enter the university ID by which you will be recognized",
             modifier = Modifier.padding(bottom = 16.dp),
             textAlign = TextAlign.Center,
         )
 
         TextField(
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = username,
             onValueChange = {
-                if (!it.contains(regex)) username = it;
+                if (it.matches(regex)) username = it;
                             },
             label = { Text("Username") }
         )

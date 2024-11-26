@@ -46,7 +46,9 @@ fun TrainingScreen(viewModel: MainViewModel){
             textState = newText
         }
 
-        DownloadButton(viewModel = viewModel, textState, minChars, minPhases) {
+        DownloadButton(
+            viewModel = viewModel, "Next Phase", textState, minChars, minPhases
+        ) {
             textState = TextFieldValue("")
         }
     }

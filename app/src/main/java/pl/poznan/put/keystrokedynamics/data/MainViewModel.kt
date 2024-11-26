@@ -84,8 +84,16 @@ class MainViewModel(
                 else -> key
             }
 
-            /* consideration: we could also stop treating those as chars and make them
-            full on char tokens, e.g. encode them as Uxxxx no matter the char */
+            /*
+                Additional two characters can be passed as key to this method:
+                DEL - when user uses backspace, and
+                EPH - when user clicks "end phase" successfully
+             */
+
+            /* SUGGESTION:
+                we could also stop treating those as chars and make them
+                full on char tokens, e.g. encode them as Uxxxx no matter the char
+            */
 
             if (pressTimestamp.longValue == 0L) {
                 duration = 0L
@@ -109,15 +117,25 @@ class MainViewModel(
     }
 
 
-    fun exportDataToTsv(context: Context) {
+    fun exportDataToTsv(context: Context, minPhases: Int) {
         viewModelScope.launch {
             val keyPresses = keyPressDao.getAllKeyPresses()
             val tsvData = keyPressesToTsv(keyPresses)
+            var apiString = "upload_tsv"
+            var phases = phasesCompleted.intValue
+            // WARNING! Monkey patch w/ sentinel value
+            if (minPhases == -1) {
+                apiString = "inference"
+                phases = -1
+            }
+            else if (phasesCompleted.intValue == minPhases) {
+                apiString = "train"
+            }
 
             username.take(1).collect { user ->
                 Log.i("TAG", "In export to tsv function")
-                saveTsvToDownloads(context, user, tsvData)
-                sendTsvToFastApi(tsvData, user, context)
+                saveTsvToDownloads(context, user, phases, tsvData)
+                sendTsvToFastApi(tsvData, user, apiString, context)
             }
         }
     }
@@ -126,5 +144,6 @@ class MainViewModel(
         var ph = phasesCompleted.intValue
         ph++
         phasesCompleted.intValue = ph
+        pressTimestamp.longValue = 0L // reset timestamp tmp value
     }
 }

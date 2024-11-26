@@ -37,9 +37,10 @@ fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     return tsvBuilder.toString()
 }
 
-fun sendTsvToFastApi(tsvData: String, username: String, context: Context) {
+fun sendTsvToFastApi(tsvData: String, username: String, apiString: String, context: Context) {
 //    Log.i("api", "username: $username")
-    val url = "https://192.168.1.100:8000/upload-tsv?username=$username"  // Pass username as query parameter
+    val serverUrlString = "https://192.168.1.100:8000"
+    val url = "$serverUrlString/$apiString?username=$username"  // Pass username as query parameter
     val client = getSslConfiguredClient(context)
 
     // Create a request body with the TSV data and the correct media type
@@ -96,22 +97,22 @@ private fun getSslConfiguredClient(context: Context): OkHttpClient {
         .build()
 }
 
-fun saveTsvToDownloads(context: Context, username: String, tsvData: String): Uri? {
+fun saveTsvToDownloads(context: Context, username: String, phase: Int, tsvData: String): Uri? {
     Log.i("TAG", "In save to downloads function")
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // Android 10 and higher: Use MediaStore API
-        saveTsvToDownloadsForQAndAbove(context, username, tsvData)
+        saveTsvToDownloadsForQAndAbove(context, username, phase, tsvData)
     } else {
         // Android 9 and lower: Directly write to external storage
-        saveTsvToDownloadsForPreQ(context, username, tsvData)
+        saveTsvToDownloadsForPreQ(context, username, phase, tsvData)
     }
 }
 
 // For Android 10+ (Q and above)
 @RequiresApi(Build.VERSION_CODES.Q)
-private fun saveTsvToDownloadsForQAndAbove(context: Context, username: String, tsvData: String): Uri? {
+private fun saveTsvToDownloadsForQAndAbove(context: Context, username: String, phase: Int, tsvData: String): Uri? {
     val contentValues = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, "key_presses_${username}.tsv")
+        put(MediaStore.MediaColumns.DISPLAY_NAME, "key_presses_${username}.$phase.tsv")
         put(MediaStore.MediaColumns.MIME_TYPE, "text/tab-separated-values")
         put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
     }
@@ -142,9 +143,9 @@ private fun saveTsvToDownloadsForQAndAbove(context: Context, username: String, t
 }
 
 // For Android 9 and below (Pre-Q)
-private fun saveTsvToDownloadsForPreQ(context: Context, username: String, tsvData: String): Uri? {
+private fun saveTsvToDownloadsForPreQ(context: Context, username: String, phase: Int, tsvData: String): Uri? {
     val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-    val file = File(downloadsDir, "key_presses_${username}.tsv")
+    val file = File(downloadsDir, "key_presses_${username}.$phase.tsv")
 
     Log.i("TAG", "About to save to downloads in preQ")
     return try {
