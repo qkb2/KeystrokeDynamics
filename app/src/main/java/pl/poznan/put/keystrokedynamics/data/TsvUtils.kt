@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager
 
 fun keyPressesToTsv(keyPresses: List<KeyPressEntity>): String {
     val tsvBuilder = StringBuilder()
-    tsvBuilder.append("Key\tPressTime\tDuration\tAccelX\tAccelY\tAccelZ\n")  // TSV header
+    tsvBuilder.append("key\tpress_time\tduration\taccel_x\taccel_y\taccel_z\n")  // TSV header
 
     for (keyPress in keyPresses) {
         tsvBuilder.append(
