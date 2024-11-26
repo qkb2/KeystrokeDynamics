@@ -2,10 +2,12 @@ package pl.poznan.put.keystrokedynamics.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +31,9 @@ fun TestingScreen(viewModel: MainViewModel) {
     var symWritten by remember { mutableIntStateOf(0) }
     // API responses states
     var responseString by remember { mutableStateOf("") }
+    // recognition percentage
+    var percentage by remember { mutableStateOf(0f) }
+
 
     // Training Screen
     Column (
@@ -61,7 +66,32 @@ fun TestingScreen(viewModel: MainViewModel) {
         }
 
         Spacer(modifier = Modifier.size(30.dp))
+
+        // buttons for testing
+//        Row(
+//            horizontalArrangement = Arrangement.spacedBy(16.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Button(onClick = { percentage = 0f }) {
+//                Text("0%")
+//            }
+//            Button(onClick = { percentage = 1f }) {
+//                Text("100%")
+//            }
+//            Spacer(modifier = Modifier.size(30.dp))
+//        }
+
+
+        // TODO: pass the percentage value from the response to percentage var
+        // percentage 0.75 == 75%
+        RecognitionBar(percentage, size = 200)
+
+        Spacer(modifier = Modifier.size(24.dp))
+
         // TODO: prettify the response body
         Text(responseString)
+
     }
+
+
 }

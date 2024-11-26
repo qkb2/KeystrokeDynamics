@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
@@ -41,7 +42,11 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavHostController){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Choose a mode", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Choose a mode",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -54,5 +59,15 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavHostController){
         Button(onClick = { navController.navigate("training") }) {
             Text(text = "Go to Training Screen")
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "If you haven't trained the model yet, go to the training screen and follow the instructions. " +
+                    "If you want to test whether the model recognizes you, navigate to the testing screen.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            textAlign = TextAlign.Center
+        )
     }
 }
