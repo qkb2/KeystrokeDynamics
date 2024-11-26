@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,6 +25,7 @@ fun TestingScreen(viewModel: MainViewModel) {
     val minChars = 100
     val minPhases = -1 // WARNING! Monkey patch sentinel value! Must NECESSARILY be set to -1
     var textState by remember { mutableStateOf(TextFieldValue("")) }
+    var symWritten by remember { mutableIntStateOf(0) }
     // Training screen
     Column (
         modifier = Modifier
@@ -39,10 +41,16 @@ fun TestingScreen(viewModel: MainViewModel) {
 
         KeyPressReader(viewModel = viewModel, minChars, minPhases, textState) { newText ->
             textState = newText
+            symWritten++
         }
 
         DownloadButton(
-            viewModel = viewModel, "Send to infer", textState, minChars, minPhases
+            viewModel = viewModel,
+            "Send to infer",
+            textState,
+            minChars,
+            minPhases,
+            symWritten
         ) {
             textState = TextFieldValue("")
         }

@@ -29,6 +29,7 @@ fun TrainingScreen(viewModel: MainViewModel){
     val minChars = 300
     val minPhases = 5
     var textState by remember { mutableStateOf(TextFieldValue("")) }
+    var symWritten by remember { mutableIntStateOf(0) }
         // Training screen
     Column (
         modifier = Modifier
@@ -44,12 +45,19 @@ fun TrainingScreen(viewModel: MainViewModel){
 
         KeyPressReader(viewModel = viewModel, minChars, minPhases, textState) { newText ->
             textState = newText
+            symWritten++
         }
 
         DownloadButton(
-            viewModel = viewModel, "Next Phase", textState, minChars, minPhases
+            viewModel = viewModel,
+            "Next Phase",
+            textState,
+            minChars,
+            minPhases,
+            symWritten
         ) {
             textState = TextFieldValue("")
+            symWritten = 0
         }
     }
 }

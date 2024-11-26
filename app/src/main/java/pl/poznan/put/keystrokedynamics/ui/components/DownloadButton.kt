@@ -22,6 +22,7 @@ fun DownloadButton(
     textState: TextFieldValue,
     minCount: Int,
     minPhases: Int,
+    symWritten: Int,
     onTextReset: () -> Unit
 ) {
     val context = LocalContext.current
@@ -32,7 +33,7 @@ fun DownloadButton(
     ) { isGranted ->
         if (isGranted) {
             // Permission granted, proceed with TSV export
-            viewModel.exportDataToTsv(context, minPhases)
+            viewModel.exportDataToTsv(context, minPhases, symWritten)
         } else {
             // Permission denied
             Toast.makeText(context, "Storage permission denied", Toast.LENGTH_SHORT).show()
@@ -51,11 +52,11 @@ fun DownloadButton(
                 requestStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             } else {
                 // Permission already granted, proceed with TSV export
-                viewModel.exportDataToTsv(context, minPhases)
+                viewModel.exportDataToTsv(context, minPhases, symWritten)
             }
         } else {
             // For Android 10+, no permission is needed, directly export data
-            viewModel.exportDataToTsv(context, minPhases)
+            viewModel.exportDataToTsv(context, minPhases, symWritten)
         }
     }
 

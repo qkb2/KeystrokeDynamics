@@ -117,13 +117,9 @@ class MainViewModel(
     }
 
 
-    fun exportDataToTsv(context: Context, minPhases: Int) {
+    fun exportDataToTsv(context: Context, minPhases: Int, symWritten: Int) {
         viewModelScope.launch {
-            val keyPresses: List<KeyPressEntity> = if (minPhases == -1) {
-                keyPressDao.getNLatestKeyPresses(100)
-            } else {
-                keyPressDao.getNLatestKeyPresses(300) // TODO: make it an actual increment
-            }
+            val keyPresses = keyPressDao.getNLatestKeyPresses(symWritten)
             val tsvData = keyPressesToTsv(keyPresses)
             var apiString = "upload_tsv"
             var phases = phasesCompleted.intValue
