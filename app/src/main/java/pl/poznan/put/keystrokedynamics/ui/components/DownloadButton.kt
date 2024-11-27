@@ -7,9 +7,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.content.ContextCompat
@@ -72,6 +76,8 @@ fun DownloadButton(
             viewModel.incrementPhase()
             if (viewModel.phasesCompleted.intValue >= minPhases) {
                 Log.i("TAG", "Completed.")
+                Toast.makeText(context, "If you are not connected to the server, please send five .tsv" +
+                        "files located in your Downloads to us.", Toast.LENGTH_LONG).show()
                 checkAndRequestStoragePermission()
             } else {
                 Log.i("TAG", "Next phase.")

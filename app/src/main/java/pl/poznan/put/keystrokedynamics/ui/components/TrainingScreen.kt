@@ -1,6 +1,7 @@
 package pl.poznan.put.keystrokedynamics.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
@@ -39,8 +42,23 @@ fun TrainingScreen(viewModel: MainViewModel){
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
-            "After writing 300 words, change your position, e.g. sit down, stand up, lay down etc.")
+            text = "After writing 300 words, change your position, e.g. sit down, stand up, lay down etc.",
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.size(6.dp))
+
+        Text(
+            text = "Please do not change your writing style after completing each phase",
+            color = Color(0xFFFF6F6F).copy(alpha = 0.7f),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+
 
         Spacer(modifier = Modifier.size(30.dp))
 

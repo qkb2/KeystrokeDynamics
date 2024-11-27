@@ -63,8 +63,11 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavHostController){
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
-            text = "If you haven't trained the model yet, go to the training screen and follow the instructions. " +
-                    "If you want to test whether the model recognizes you, navigate to the testing screen.",
+            text = "If you have not trained the model yet, go to the training screen and follow the instructions. After " +
+                    "completing training phases, if you are not connected to the server, please send five " +
+                    "files located in Downloads to us.\n" +
+                    "If you are connected to the server and want to test whether the model recognizes you, navigate to " +
+                    "the testing screen.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             textAlign = TextAlign.Center
