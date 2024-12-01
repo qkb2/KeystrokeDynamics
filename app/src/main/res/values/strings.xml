@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">KeystrokeDynamics</string>
+    <string name="storage_permission_denied">Storage permission denied</string>
+    <string name="send_files_message">
+        If you are not connected to the server, please send five .tsv files located in your Downloads to us.
+    </string>
+    <string name="change_position_message">Please change your position and resume writing.</string>
+    <string name="enter_min_characters">Please enter at least %1$d characters per phase.</string>
+    <string name="logout">Logout</string>
+    <string name="choose_mode">Choose a mode</string>
+    <string name="go_to_testing_screen">Go to Testing Screen</string>
+    <string name="go_to_training_screen">Go to Training Screen</string>
+    <string name="training_instructions">
+        If you have not trained the model yet, go to the training screen and follow the instructions.
+        After completing training phases, if you are not connected to the server, please send five files located in Downloads to us.\n
+        If you are connected to the server and want to test whether the model recognizes you, navigate to the testing screen.
+    </string>
+    <string name="chars_and_phases">
+        Chars left to type: %1$d\n
+        Phases left to complete: %2$d
+    </string>
+    <string name="type_here">Type something really cool 😎</string>
+    <string name="enter_id">Enter the university ID by which you will be recognized</string>
+    <string name="username">Username</string>
+    <string name="id">ID</string>
+    <string name="log_in">Log in</string>
+    <string name="send_for_inference">After writing 100 words, send for inference and wait for the reply from the server.</string>
+    <string name="send_to_infer">Send to infer</string>
+    <string name="after_300_words">After writing 300 words, change your position, e.g. sit down, stand up, lay down etc.</string>
+    <string name="dont_change_style">Please do not change your writing style after completing each phase</string>
+    <string name="next_phase">Next Phase</string>
 </resources>

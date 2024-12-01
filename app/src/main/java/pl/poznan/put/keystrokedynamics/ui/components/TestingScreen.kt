@@ -17,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import pl.poznan.put.keystrokedynamics.R
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
@@ -44,7 +46,7 @@ fun TestingScreen(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "After writing 100 words, send for inference and wait for the reply from the server.")
+            stringResource(R.string.send_for_inference))
 
         Spacer(modifier = Modifier.size(30.dp))
 
@@ -55,7 +57,7 @@ fun TestingScreen(viewModel: MainViewModel) {
 
         DownloadButton(
             viewModel = viewModel,
-            "Send to infer",
+            stringResource(R.string.send_to_infer),
             textState,
             minChars,
             minPhases,

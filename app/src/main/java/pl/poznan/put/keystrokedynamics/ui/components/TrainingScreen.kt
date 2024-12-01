@@ -20,9 +20,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import pl.poznan.put.keystrokedynamics.R
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
@@ -44,7 +46,7 @@ fun TrainingScreen(viewModel: MainViewModel){
     ) {
 
         Text(
-            text = "After writing 300 words, change your position, e.g. sit down, stand up, lay down etc.",
+            text = stringResource(R.string.after_300_words),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
@@ -52,7 +54,7 @@ fun TrainingScreen(viewModel: MainViewModel){
         Spacer(modifier = Modifier.size(6.dp))
 
         Text(
-            text = "Please do not change your writing style after completing each phase",
+            text = stringResource(R.string.dont_change_style),
             color = Color(0xFFFF6F6F).copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -69,7 +71,7 @@ fun TrainingScreen(viewModel: MainViewModel){
 
         DownloadButton(
             viewModel = viewModel,
-            "Next Phase",
+            stringResource(R.string.next_phase),
             textState,
             minChars,
             minPhases,

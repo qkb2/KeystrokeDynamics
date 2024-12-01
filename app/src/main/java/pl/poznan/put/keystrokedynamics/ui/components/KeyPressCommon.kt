@@ -19,10 +19,12 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import pl.poznan.put.keystrokedynamics.R
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 import kotlin.math.max
 
@@ -41,7 +43,11 @@ fun KeyPressReader(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = "Chars left to type: ${max(0, minCount - inputCount)}\nPhases left to complete: ${max(0, minStates - viewModel.phasesCompleted.intValue)}",
+                text = stringResource(
+                    R.string.chars_and_phases,
+                    max(0, minCount - inputCount),
+                    max(0, minStates - viewModel.phasesCompleted.intValue)
+                ),
                 color = Color.Gray,
                 textAlign = TextAlign.End,
                 modifier = Modifier.padding(end = 8.dp)
@@ -51,7 +57,7 @@ fun KeyPressReader(
         TextField(
             value = textState,
             placeholder = {
-                Text("Type something really cool 😎", color = Color.Gray)
+                Text(stringResource(R.string.type_here), color = Color.Gray)
             },
             onValueChange = { newTextState ->
                 val newText = newTextState.text

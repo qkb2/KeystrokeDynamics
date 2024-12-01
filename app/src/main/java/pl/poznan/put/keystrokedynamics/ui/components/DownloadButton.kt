@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.core.content.ContextCompat
+import pl.poznan.put.keystrokedynamics.R
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
 @Composable
@@ -41,7 +42,7 @@ fun DownloadButton(
             viewModel.exportDataToTsv(context, minPhases, symWritten, onResponse)
         } else {
             // Permission denied
-            Toast.makeText(context, "Storage permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.storage_permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -76,19 +77,22 @@ fun DownloadButton(
             viewModel.incrementPhase()
             if (viewModel.phasesCompleted.intValue >= minPhases) {
                 Log.i("TAG", "Completed.")
-                Toast.makeText(context, "If you are not connected to the server, please send five .tsv" +
-                        "files located in your Downloads to us.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.send_files_message), Toast.LENGTH_LONG).show()
                 checkAndRequestStoragePermission()
             } else {
                 Log.i("TAG", "Next phase.")
-                Toast.makeText(context, "Please change your position and resume writing.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.change_position_message), Toast.LENGTH_SHORT).show()
                 checkAndRequestStoragePermission()
                 onTextReset()
                 viewModel.onKeyPress("EPH") // end phase symbol
             }
         } else {
             Log.i("TAG", "Too short.")
-            Toast.makeText(context, "Please enter at least $minCount characters per phase.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.enter_min_characters, minCount),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }) {
         Text(buttonText)

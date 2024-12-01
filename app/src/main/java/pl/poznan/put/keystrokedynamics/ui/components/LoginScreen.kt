@@ -15,8 +15,10 @@ import pl.poznan.put.keystrokedynamics.data.MainViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import pl.poznan.put.keystrokedynamics.R
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -32,7 +34,7 @@ fun LoginScreen(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Enter the university ID by which you will be recognized",
+            text = stringResource(R.string.enter_id),
             modifier = Modifier.padding(bottom = 16.dp),
             textAlign = TextAlign.Center,
         )
@@ -43,7 +45,7 @@ fun LoginScreen(viewModel: MainViewModel) {
             onValueChange = {
                 if (it.matches(regex)) username = it;
                             },
-            label = { Text("Username") }
+            label = { Text(stringResource(R.string.id)) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -53,7 +55,7 @@ fun LoginScreen(viewModel: MainViewModel) {
             enabled = username.isNotBlank()
         )
         {
-            Text("Log In")
+            Text(stringResource(R.string.log_in))
         }
     }
 }
