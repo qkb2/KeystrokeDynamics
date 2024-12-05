@@ -24,9 +24,9 @@
     <string name="username">Username</string>
     <string name="id">ID</string>
     <string name="log_in">Log in</string>
-    <string name="send_for_inference">After writing 100 words, send for inference and wait for the reply from the server.</string>
+    <string name="send_for_inference">After writing 100 characters, send for inference and wait for the reply from the server.</string>
     <string name="send_to_infer">Send to infer</string>
-    <string name="after_300_words">After writing 300 words, change your position, e.g. sit down, stand up, lay down etc.</string>
+    <string name="after_300_words">After writing 300 characters, change your position, e.g. sit down, stand up, lay down etc.</string>
     <string name="dont_change_style">Please do not change your writing style after completing each phase</string>
     <string name="next_phase">Next Phase</string>
 </resources>
