@@ -112,7 +112,7 @@ fun KeyPressReader(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         if (textState.text.isEmpty()) {
-                            Text("Type something really cool 😎", color = Color.Gray)
+                            Text(stringResource(R.string.type_here), color = Color.Gray)
                         }
                         innerTextField() // Render the actual text field
                     }
