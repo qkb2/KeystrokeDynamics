@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import org.json.JSONObject
 import pl.poznan.put.keystrokedynamics.R
 import pl.poznan.put.keystrokedynamics.data.MainViewModel
 
@@ -33,8 +34,9 @@ fun TestingScreen(viewModel: MainViewModel) {
     var symWritten by remember { mutableIntStateOf(0) }
     // API responses states
     var responseString by remember { mutableStateOf("") }
-    // recognition percentage
     var percentage by remember { mutableStateOf(0f) }
+    var predictionMessage by remember { mutableStateOf("") }
+
 
 
     // Training Screen
@@ -62,7 +64,25 @@ fun TestingScreen(viewModel: MainViewModel) {
             minChars,
             minPhases,
             symWritten,
-            onResponse = { str -> responseString = str }
+            onResponse = { responseJson ->
+                // JSON parsing
+                val jsonResponse = JSONObject(responseJson)
+                val score = jsonResponse.optDouble("score", 0.0).toFloat()
+                val prediction = jsonResponse.optInt("prediction", 0)
+
+                // for RecognitionBar
+                percentage = score
+
+                // Response based on prediction
+                predictionMessage = if (prediction == 1) {
+                    "The model recognized the user successfully."
+                } else {
+                    "The model did not recognize the user."
+                }
+
+                // not parsed
+                responseString = jsonResponse.optString("message", "Unknown response")
+            }
         ) {
             textState = TextFieldValue("")
         }
@@ -83,15 +103,12 @@ fun TestingScreen(viewModel: MainViewModel) {
 //            Spacer(modifier = Modifier.size(30.dp))
 //        }
 
-
-        // TODO: pass the percentage value from the response to percentage var
         // percentage 0.75 == 75%
         RecognitionBar(percentage, size = 200)
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        // TODO: prettify the response body
-        Text(responseString)
+        Text(predictionMessage)
 
     }
 
